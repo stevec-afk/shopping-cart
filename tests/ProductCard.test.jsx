@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import ProductCard from "../src/components/ProductCard";
 import userEvent from "@testing-library/user-event";
@@ -10,6 +10,7 @@ describe("Product Card Component", () => {
     price: 99.99,
     image: "https://example.com",
   };
+
   it("renders a product title and price based on props", () => {
     render(<ProductCard product={mockProduct} />);
 
@@ -18,6 +19,7 @@ describe("Product Card Component", () => {
     expect(title).toBeInTheDocument();
     expect(price).toBeInTheDocument();
   });
+
   it(
     "should render a quantity input with the default value of 1, " +
       "with increment, decrement, " +
@@ -37,6 +39,7 @@ describe("Product Card Component", () => {
       expect(addButton).toBeInTheDocument();
     },
   );
+
   it("clicking the + button increments the quantity.", async () => {
     render(<ProductCard product={mockProduct} />);
     const user = userEvent.setup();
@@ -46,6 +49,7 @@ describe("Product Card Component", () => {
     await user.click(incrementButton);
     expect(quantityInput).toHaveValue(2);
   });
+
   it("clicking the - button decrements quantity", async () => {
     render(<ProductCard product={mockProduct} />);
 
@@ -59,6 +63,7 @@ describe("Product Card Component", () => {
 
     expect(quantityInput).toHaveValue(1);
   });
+
   it("enforces boundary limits between 1 and 99", async () => {
     render(<ProductCard product={mockProduct} />);
     const user = userEvent.setup();
@@ -73,5 +78,17 @@ describe("Product Card Component", () => {
       await user.click(incrementButton);
     }
     expect(quantityInput).toHaveValue(99);
+  });
+  
+  it("should pass product details to the parent when add to cart is clicked", async () => {
+    const mockAddToCart = vi.fn();
+    render(<ProductCard product={mockProduct} onAddToCart={mockAddToCart} />);
+    const user = userEvent.setup();
+    const incrementButton = screen.getByRole("button", { name: "+" });
+    const addButton = screen.getByRole("button", { name: "Add to Cart" });
+
+    await user.click(incrementButton);
+    await user.click(addButton);
+    expect(mockAddToCart).toHaveBeenCalledWith(mockProduct, 2);
   });
 });
