@@ -7,7 +7,7 @@ import App from "../src/App";
 describe("App Integration Flow", () => {
   it("adds a product to the cart and updates the navigation bar counter", async () => {
     render(
-      <MemoryRouter>
+      <MemoryRouter initialEntries={["/shop"]}>
         <App />
       </MemoryRouter>,
     );

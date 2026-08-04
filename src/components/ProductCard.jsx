@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 function ProductCard(props) {
-  const { product } = props;
+  const { product, onAddToCart } = props;
   const [quantity, setQuantity] = useState(1);
 
   function handleIncrement() {
@@ -10,6 +10,12 @@ function ProductCard(props) {
 
   function handleDecrement() {
     if (quantity > 1) setQuantity(quantity - 1);
+  }
+
+  function handleAddToCartClick() {
+    if (onAddToCart) {
+      onAddToCart(product, quantity);
+    }
   }
 
   const formattedPrice = product.price.toFixed(2);
@@ -22,7 +28,7 @@ function ProductCard(props) {
       <button onClick={handleDecrement}>-</button>
       <input type="number" value={quantity} readOnly />
       <button onClick={handleIncrement}>+</button>
-      <button>Add to Cart</button>
+      <button onClick={handleAddToCartClick}>Add to Cart</button>
     </div>
   );
 }

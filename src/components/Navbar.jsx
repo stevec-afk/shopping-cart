@@ -7,6 +7,7 @@ function Navbar(props) {
   return (
     <nav>
       <Link to="/shop">Shop</Link>
+      <Link to="/cart">Cart</Link>
       <span>{totalItems}</span>
     </nav>
   );
