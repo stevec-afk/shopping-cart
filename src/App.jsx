@@ -1,20 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import ShopPage from "./components/ShopPage";
 import CartPage from "./components/CartPage";
 
 function App() {
+  const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
 
-  const mockProduct = {
-    id: 1,
-    title: "Test Backpack",
-    price: 99.99,
-    image: "https://example.com",
-  };
+  useEffect(() => {
+    async function fetchProducts() {
+      const response = await fetch("https://fakestoreapi.com/products");
+      const data = await response.json();
+      setProducts(data);
+    }
 
-  const products = [mockProduct];
+    fetchProducts();
+  }, []);
 
   function handleAddToCart(product, quantity) {
     const updatedCart = [...cart, { ...product, quantity }];
